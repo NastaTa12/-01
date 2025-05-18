@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вторая страница</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            padding: 20px;
+            margin: 0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        h1 {
+            color: #ff6b6b;
+        }
+        .links {
+            margin: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #45a049;
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Анимация сердечек ❤️</h1>
+    <p>Кликайте по экрану, чтобы сердечки разлетались!</p>
+    <div class="links">
+        <a href="Главная.html">На главную</a>
+        <a href="Первая.html">Первая страница</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+
+            // Создаем падающие сердечки
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * window.innerWidth + 'px';
+                heart.style.top = '-20px';
+                heart.style.opacity = Math.random() * 0.7 + 0.3;
+                heart.style.transform = `rotate(45deg) scale(${Math.random() * 0.5 + 0.5})`;
+                body.appendChild(heart);
+
+                let posY = -20;
+                const fallSpeed = Math.random() * 3 + 2;
+
+                const fall = setInterval(() => {
+                    posY += fallSpeed;
+                    heart.style.top = posY + 'px';
+
+                    if (posY > window.innerHeight) {
+                        clearInterval(fall);
+                        heart.remove();
+                    }
+                }, 20);
+            }
+
+            // Разлетающиеся сердечки при клике
+            body.addEventListener('click', (e) => {
+                for (let i = 0; i < 10; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.style.left = e.clientX + 'px';
+                    heart.style.top = e.clientY + 'px';
+                    heart.style.opacity = Math.random() * 0.7 + 0.3;
+                    heart.style.transform = `rotate(45deg) scale(${Math.random() * 0.5 + 0.5})`;
+                    body.appendChild(heart);
+
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 5 + 2;
+                    let vx = Math.cos(angle) * speed;
+                    let vy = Math.sin(angle) * speed;
+                    let posX = e.clientX;
+                    let posY = e.clientY;
+
+                    const explode = setInterval(() => {
+                        posX += vx;
+                        posY += vy;
+                        vy += 0.1; // гравитация
+                        heart.style.left = posX + 'px';
+                        heart.style.top = posY + 'px';
+                        heart.style.opacity -= 0.01;
+
+                        if (heart.style.opacity <= 0 || posY > window.innerHeight) {
+                            clearInterval(explode);
+                            heart.remove();
+                        }
+                    }, 20);
+                }
+            });
+
+            // Генерация падающих сердечек каждые 0.5 секунд
+            setInterval(createHeart, 500);
+        });
+    </script>
+</body>
+</html>
